@@ -52,6 +52,7 @@ public class Manager {
         JLabel lbInterval = new JLabel("Interval");
         lbInterval.setSize(60,5);
         JTextField tbInterval = new JTextField();
+        //todo change to 1000
         tbInterval.setText("1000");
         row3.add(lbInterval);
         row3.add(tbInterval);

@@ -54,10 +54,11 @@ public class Sender implements Runnable{
 
 
                         DatagramPacket pack = new DatagramPacket(part,part.length,address,port);
+
                         client.send(pack); //blocking method
-                        System.out.println("after send method");
 
                     }
+                    //todo delete
                     //в цикле получить только 61*1024 байта
                     //
                     //передать байты по частям
@@ -69,8 +70,6 @@ public class Sender implements Runnable{
                     DatagramPacket pack = new DatagramPacket(imageBytes,imageBytes.length,address,port);
                     client.send(pack); //blocking method
                 }
-                //todo delete
-               // System.exit(1);
 
                 Thread.sleep(interval);
             }

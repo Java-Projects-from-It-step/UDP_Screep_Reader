@@ -11,11 +11,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class Listener implements Runnable{
+public class Listener implements Runnable {
 
     private Manager frame = null;
     DatagramSocket listener = null;
-    byte[]buf = null;
+    byte[] buf = null;
 
     public Listener(Manager frame) throws SocketException {
         listener = new DatagramSocket(8888);
@@ -25,33 +25,41 @@ public class Listener implements Runnable{
 
     @Override
     public void run() {
-            ByteArrayOutputStream baos = null;
-        while(true){
-            buf = new byte[1024*63];
-            baos = new ByteArrayOutputStream();
-            DatagramPacket in_pack = new DatagramPacket(buf,buf.length);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedImage image = null;
+        while (true) {
+            buf = new byte[1024 * 63];
+
+            DatagramPacket in_pack = new DatagramPacket(buf, buf.length);
             try {
                 listener.receive(in_pack); //blocking method
-                System.out.println("Getting from client bytes length: "+in_pack.getLength());
+                System.out.println("Getting from client bytes length: " + in_pack.getLength());
                 baos.write(in_pack.getData());
 
-                if (in_pack.getLength()!=63*1024){
-                    listener.receive(in_pack);
-                    baos.write(in_pack.getData());
+                while(true){
+                    if (in_pack.getLength() == 63 * 1024) {
+                        listener.receive(in_pack);
+                        baos.write(in_pack.getData());
 
+                    }else{
+
+                        break;
+                    }
                 }
 
 
-
-
-
                 // in_pack.getData() getting bytes
-                System.out.println("Length of picture "+ baos.toByteArray().length );
-                BufferedImage image = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
+                System.out.println("Length of picture " + baos.toByteArray().length);
+
+
+                 image = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
+
                 frame.setImage(image);
-                frame.graphics.drawImage(image,0,0,image.getWidth(),image.getHeight(),null);
+                frame.graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+                frame.panel.repaint();
                 frame.panel.repaint();
 
+                baos.reset();
 
             } catch (IOException e) {
                 e.printStackTrace();
