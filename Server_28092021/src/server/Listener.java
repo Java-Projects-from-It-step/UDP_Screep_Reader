@@ -20,43 +20,30 @@ public class Listener implements Runnable {
     public Listener(Manager frame) throws SocketException {
         listener = new DatagramSocket(8888);
         this.frame = frame;
-
     }
 
     @Override
     public void run() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BufferedImage image = null;
+        DatagramPacket in_pack = null;
         while (true) {
             buf = new byte[1024 * 63];
 
-            DatagramPacket in_pack = new DatagramPacket(buf, buf.length);
+            in_pack = new DatagramPacket(buf, buf.length);
             try {
                 listener.receive(in_pack); //blocking method
-                System.out.println("Getting from client bytes length: " + in_pack.getLength());
                 baos.write(in_pack.getData());
 
-                while(true){
-                    if (in_pack.getLength() == 63 * 1024) {
-                        listener.receive(in_pack);
-                        baos.write(in_pack.getData());
-
-                    }else{
-
-                        break;
-                    }
+                while (in_pack.getLength() == 63 * 1024) {
+                    listener.receive(in_pack);
+                    baos.write(in_pack.getData());
                 }
 
-
-                // in_pack.getData() getting bytes
-                System.out.println("Length of picture " + baos.toByteArray().length);
-
-
-                 image = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
+                image = ImageIO.read(new ByteArrayInputStream(baos.toByteArray()));
 
                 frame.setImage(image);
                 frame.graphics.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
-                frame.panel.repaint();
                 frame.panel.repaint();
 
                 baos.reset();

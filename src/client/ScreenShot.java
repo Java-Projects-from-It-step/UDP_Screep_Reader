@@ -43,14 +43,14 @@ public class ScreenShot {
         return baos.toByteArray();
     }
 
-    public static BufferedImage resizeImage(BufferedImage originalImage, int type, int widht, int height){
+    public static BufferedImage resizeImage(BufferedImage originalImage, int type, int width, int height){
         // пустая картинка с нашими размерами
-        BufferedImage resizedImage = new BufferedImage(widht,height,type);
+        BufferedImage resizedImage = new BufferedImage(width,height,type);
         // для рисования нужно создать объект Graphics
 
         Graphics2D g = resizedImage.createGraphics();
         // рисуем c размером 0 0 координамы.
-        g.drawImage(originalImage,0,0,widht,height,null);
+        g.drawImage(originalImage,0,0,width,height,null);
         // нужно освободить ресурсы
         g.dispose();
         return resizedImage;
